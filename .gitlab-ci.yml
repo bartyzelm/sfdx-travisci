@@ -1,7 +1,6 @@
 image: illbilly/sfdx #image with sfdx installed
 pipelines:
-  default: #this will run for all branches unless specificed otherwise
-    - step:
+     - step:
         script:
           #===install dependancies===
           - apt-get install -y jq #used to check test results
