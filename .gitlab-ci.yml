@@ -1,8 +1,10 @@
 image: illbilly/sfdx #image with sfdx installed
-pipelines:
-     - step:
-        script:
-          #===install dependancies===
+
+
+
+before_script:
+
+#===install dependancies===
           - apt-get install -y jq #used to check test results
           #===login===
           - openssl enc -d -aes-256-cbc -in assets/server.key.enc -out assets/server.key -K $AESKEY -iv $IVKEY #deencryt server.key
@@ -17,10 +19,13 @@ pipelines:
           #- sfdx force:org:delete -u ciorg -p #(this currently doesn't work due to known issue)
           #===handle test Results===
           - bash assets/checkTestResults.sh
-  branches:
-    master: #anything commited to master should be deploy to prod
-      - step:
-          script:
+
+master: #anything commited to master should be deploy to prod
+      stage: deploy
+      environment: Production
+      only:
+        - master
+      script:
             #===create deployment package===
             - sfdx force:source:convert -d src
             #===auth with target===
@@ -29,3 +34,5 @@ pipelines:
             - sfdx force:auth:jwt:grant -s --clientid $CONSUMERKEY_TARGET --jwtkeyfile assets/server.key --username $USERNAME_TARGET
             #===deploy===
             - sfdx force:mdapi:deploy -d src -w 200 -e true #warning: this doesn't actually throw a build failure
+
+    
