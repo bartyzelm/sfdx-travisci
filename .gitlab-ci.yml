@@ -7,7 +7,7 @@ before_script:
 #===install dependancies===
           - apt-get install -y jq #used to check test results
           #===login===
-          - openssl enc -d -aes-256-cbc -in assets/server.key.enc -out assets/server.key -K $AESKEY -iv $IVKEY #deencryt server.key
+          #- openssl enc -d -aes-256-cbc -in assets/server.key.enc -out assets/server.key -K $AESKEY -iv $IVKEY #deencryt server.key
           - export SFDX_DISABLE_ENCRYPTION=true #required to run sfdx force from CI enviorment
           - sfdx force:auth:jwt:grant --clientid $CONSUMERKEY_HUB --jwtkeyfile assets/server.key --username $USERNAME_HUB --setdefaultdevhubusername
           #===setup org===
@@ -29,7 +29,7 @@ master: #anything commited to master should be deploy to prod
             #===create deployment package===
             - sfdx force:source:convert -d src
             #===auth with target===
-            - openssl enc -d -aes-256-cbc -in assets/server.key.enc -out assets/server.key -K $AESKEY -iv $IVKEY #deencryt server.key
+            #- openssl enc -d -aes-256-cbc -in assets/server.key.enc -out assets/server.key -K $AESKEY -iv $IVKEY #deencryt server.key
             - export SFDX_DISABLE_ENCRYPTION=true
             - sfdx force:auth:jwt:grant -s --clientid $CONSUMERKEY_TARGET --jwtkeyfile assets/server.key --username $USERNAME_TARGET
             #===deploy===
